@@ -20,8 +20,6 @@ jobs:
             sf_version: '7.*'
           - php: '8.4'
             sf_version: '8.*'
-          - php: '8.3'
-            sf_version: '8.*'
         exclude:
           - php: '8.1'
             sf_version: '7.*'
@@ -32,23 +30,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: |
-          apt-get update -q && apt-get install -yq git unzip zip
+        run: apt-get update -q && apt-get install -yq git unzip zip
 
       - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        run: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-      - name: Install Symfony Flex
-        run: composer global require symfony/flex --no-interaction
+      - name: Configure Composer plugins
+        run: |
+          composer global config --no-plugins allow-plugins.symfony/flex true
+          composer global require --no-interaction symfony/flex
 
       - name: Download dependencies
         env:
           SYMFONY_REQUIRE: ${{ matrix.sf_version }}
           COMPOSER_ALLOW_SUPERUSER: 1
-        run: |
-          composer config --global --no-interaction allow-plugins.symfony/flex true
-          composer update --no-interaction --prefer-dist --optimize-autoloader ${{ matrix.strategy == 'lowest' && '--prefer-lowest' || '' }}
+        run: composer update --no-interaction --prefer-dist --optimize-autoloader ${{ matrix.strategy == 'lowest' && '--prefer-lowest' || '' }}
 
       - name: Run tests
         run: ./vendor/bin/phpunit
