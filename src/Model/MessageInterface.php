@@ -61,12 +61,7 @@ interface MessageInterface
      * immutability of the message, and MUST return an instance that has the
      * changed request target.
      */
-    public function withAddedMeta(string $key, string $value): self;
+    public function withAddedMeta(string $key, mixed $value): self;
 
-    /**
-     * @param mixed|null $default
-     *
-     * @return mixed|null
-     */
-    public function getMeta(string $key, $default = null);
+    public function getMeta(string $key, mixed $default = null): mixed;
 }

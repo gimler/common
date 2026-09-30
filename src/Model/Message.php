@@ -144,7 +144,7 @@ final class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function withAddedMeta(string $key, $value): MessageInterface
+    public function withAddedMeta(string $key, mixed $value): MessageInterface
     {
         $new = clone $this;
         $new->meta[$key] = $value;
@@ -155,7 +155,7 @@ final class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function getMeta(string $key, $default = null)
+    public function getMeta(string $key, mixed $default = null): mixed
     {
         if (\array_key_exists($key, $this->meta)) {
             return $this->meta[$key];
